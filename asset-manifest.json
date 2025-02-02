@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/email-reply-ai/static/js/main.5d2b85e2.js",
+    "index.html": "/email-reply-ai/index.html",
+    "main.5d2b85e2.js.map": "/email-reply-ai/static/js/main.5d2b85e2.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.5d2b85e2.js"
+  ]
+}

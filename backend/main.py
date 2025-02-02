@@ -24,7 +24,7 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Update with your frontend's URL
+    allow_origins=["*"],  # Allows requests from any origin; change if specific frontend URL is required
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -48,6 +48,11 @@ def generate_reply(email_text: str, tone: str) -> str:
         return response.choices[0].message.content
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in OpenAI API call: {str(e)}")
+
+# Root Endpoint
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to Email Reply AI"}
 
 # API Endpoint
 @app.post("/generate-reply")

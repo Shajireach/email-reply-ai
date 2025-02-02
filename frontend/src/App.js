@@ -1,67 +1,74 @@
 import React, { useState } from "react";
-import { generateReply } from "./api";
+import "./App.css";
+
+const generateReply = async (emailText, tone) => {
+  const response = await fetch("https://your-backend-url/generate-reply", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email_text: emailText, tone }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch");
+  }
+
+  const data = await response.json();
+  return data.reply;
+};
 
 function App() {
   const [emailText, setEmailText] = useState("");
-  const [tone, setTone] = useState("professional");
+  const [tone, setTone] = useState("Professional");
   const [reply, setReply] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // State for spinner
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(""); // Clear any previous errors
-    setReply(""); // Clear previous reply
+    setError("");
+    setIsLoading(true); // Show spinner
     try {
-      const response = await generateReply(emailText, tone);
-      setReply(response);
+      const generatedReply = await generateReply(emailText, tone);
+      setReply(generatedReply);
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      setError(err.message);
+    } finally {
+      setIsLoading(false); // Hide spinner
     }
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+    <div className="App">
       <h1>Email Reply Generator</h1>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "10px" }}>
-          <label htmlFor="emailText">Email Text:</label>
-          <textarea
-            id="emailText"
-            value={emailText}
-            onChange={(e) => setEmailText(e.target.value)}
-            rows="5"
-            style={{ width: "100%", padding: "10px" }}
-            required
-          ></textarea>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <label htmlFor="tone">Tone:</label>
-          <select
-            id="tone"
-            value={tone}
-            onChange={(e) => setTone(e.target.value)}
-            style={{ padding: "5px" }}
-          >
-            <option value="professional">Professional</option>
-            <option value="casual">Casual</option>
-            <option value="support">Support</option>
-          </select>
-        </div>
-        <button type="submit" style={{ padding: "10px 20px", cursor: "pointer" }}>
-          Generate Reply
+        <label>Email Text:</label>
+        <textarea
+          value={emailText}
+          onChange={(e) => setEmailText(e.target.value)}
+        ></textarea>
+        <label>Tone:</label>
+        <select value={tone} onChange={(e) => setTone(e.target.value)}>
+          <option value="Professional">Professional</option>
+          <option value="Casual">Casual</option>
+          <option value="Support">Support</option>
+        </select>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "Loading..." : "Generate Reply"}
         </button>
       </form>
+      {isLoading && (
+        <div>
+          <p>Loading...</p>
+          <div className="spinner"></div>
+        </div>
+      )}
       {reply && (
-        <div style={{ marginTop: "20px", padding: "10px", backgroundColor: "#f9f9f9", border: "1px solid #ccc" }}>
-          <h3>Generated Reply:</h3>
+        <div>
+          <h2>Generated Reply:</h2>
           <p>{reply}</p>
         </div>
       )}
-      {error && (
-        <div style={{ marginTop: "20px", color: "red" }}>
-          <strong>Error:</strong> {error}
-        </div>
-      )}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
     </div>
   );
 }

@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/email-reply-ai/static/js/main.e3e18ef8.js",
+    "main.js": "/email-reply-ai/static/js/main.17d18115.js",
     "index.html": "/email-reply-ai/index.html",
-    "main.e3e18ef8.js.map": "/email-reply-ai/static/js/main.e3e18ef8.js.map"
+    "main.17d18115.js.map": "/email-reply-ai/static/js/main.17d18115.js.map"
   },
   "entrypoints": [
-    "static/js/main.e3e18ef8.js"
+    "static/js/main.17d18115.js"
   ]
 }
